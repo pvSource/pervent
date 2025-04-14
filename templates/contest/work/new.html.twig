@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Work{% endblock %}
+
+{% block body %}
+    <h1>Create new Work</h1>
+
+    {{ include('contest/work/_form.html.twig') }}
+
+    <a href="{{ path('app_contest_work_index', {contestCode: contest.code}) }}">back to list</a>
+{% endblock %}
