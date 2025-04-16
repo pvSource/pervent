@@ -1,0 +1,14 @@
+//Сброс стилей
+@import 'reset';
+
+//Подключение основных стилей
+@import 'main';
+
+//Подключение переменных
+@import "variables/main";
+
+//Стили <header>
+@import "header";
+
+//Стили contest
+@import "contest/main";

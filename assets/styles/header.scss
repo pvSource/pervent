@@ -1,0 +1,36 @@
+.header {
+  position: sticky;
+  top: 0;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 110px;
+  border-bottom: 2px black solid;
+
+  padding: 18px 36px;
+
+  &__logo-box {
+    max-width: 300px;
+    max-height: 70px;
+    overflow: hidden;
+
+    .header__logo-image {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  &__nav-box {
+    display: flex;
+
+    .header__nav {
+      min-width: 214px;
+    }
+  }
+
+  &__settings-box {
+
+  }
+}

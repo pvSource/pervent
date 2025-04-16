@@ -1,0 +1,72 @@
+.contest-item {
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  height: 552px;
+  width: 444px;
+  border-radius: 20px;
+  border: 5px black solid;
+
+  &__image-box {
+    height: 340px;
+    width: 100%;
+    overflow: hidden;
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  &__text-box {
+    padding: 12px;
+
+    .contest-item__name-box {
+      h4 {
+        font-weight: bold;
+        font-size: 36px;
+      }
+    }
+
+    .contest-item__description-box {
+      p {
+        font-size: 20px;
+      }
+    }
+
+    .contest-item__date-box {
+      span {
+        font-size: 20px;
+      }
+    }
+
+    .contest-item__actions-box {
+      .contest-item__button {
+        border-radius: 5px;
+        border: none;
+        background-color: $goldBright;
+        font-size: 20px;
+        padding: 8px 16px;
+      }
+    }
+  }
+
+
+  &_primary {
+    width: 100%;
+    flex-direction: row;
+    border-color: $gold;
+
+    .contest-item__image-box {
+      width: 50%;
+      height: 100%;
+    }
+
+    .contest-item__text-box {
+      width: 50%;
+    }
+
+  }
+}

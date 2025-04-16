@@ -1,0 +1,12 @@
+body, * {
+  background-color: white;
+  font-family: Inter, serif;
+}
+
+.main {
+  &__wrapper {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
