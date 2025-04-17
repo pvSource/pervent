@@ -3,49 +3,45 @@
 {% block title %}Contest{% endblock %}
 
 {% block body %}
-    <h1>Contest</h1>
+    <section class="main__contest-detail contest-detail">
+        <div class="contest-detail__header">
+            <nav class="contest-detail__nav-box">
+                <a href="{{ path('app_contest_index')}}">Вернуться ко всем конкурсам</a>
+            </nav>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ contest.id }}</td>
-            </tr>
-            <tr>
-                <th>Code</th>
-                <td>{{ contest.code }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ contest.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ contest.description }}</td>
-            </tr>
-            <tr>
-                <th>BeginAt</th>
-                <td>{{ contest.beginAt ? contest.beginAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>FinishAt</th>
-                <td>{{ contest.finishAt ? contest.finishAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+            <div class="contest-detail__image">
+            </div>
+            <div class="contest-detail__info">
+                <div class="contest-detail__name-box">
+                    <h2>{{ contest.name }}</h2>
+                    <span class="contest-detail__code">{{ contest.code }}</span>
+                </div>
+                <div class="contest-detail__description-box">
+                    {{ contest.description }}
+                </div>
+                <div class="contest-detail__time-box">
+                    <p>Дата начала конкурса: {{ contest.beginAt ? contest.beginAt|date('Y-m-d H:i:s') : '' }}</p>
+                    <p>Дата окончания конкурса: {{ contest.beginAt ? contest.finishAt|date('Y-m-d H:i:s') : '' }}</p>
+                </div>
+            </div>
 
-    <h2>Все работы конкурса:</h2>
-    {% for work in works %}
-        <div style="border: 1px black solid">
-            <a href="{{ path('app_contest_work_show', {'contestCode': contest.code, 'id': work.id}) }}">{{ work.name }}</a>
-            <p>{{ work.description }}</p>
+            <div class="contest-detail__action-box">
+                <a href="{{ path('app_contest_work_new', {'contestCode': contest.code}) }}">Участвовать</a>
+                <a href="{{ path('app_contest_edit', {'code': contest.code}) }}">Редактировать конкурс</a>
+                {{ include('contest/_delete_form.html.twig') }}
+            </div>
+
         </div>
-    {% endfor %}
+        <div class="contest-detail__works">
+            {% for work in works %}
+                <div style="border: 1px black solid">
+                    <a href="{{ path('app_contest_work_show', {'contestCode': contest.code, 'id': work.id}) }}">{{ work.name }}</a>
+                    <p>{{ work.description }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+    </section>
 
 
-    <a href="{{ path('app_contest_index') }}">back to list</a>
-
-    <a href="{{ path('app_contest_edit', {'code': contest.code}) }}">edit</a>
-
-    {{ include('contest/_delete_form.html.twig') }}
 {% endblock %}

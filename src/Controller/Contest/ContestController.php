@@ -46,8 +46,9 @@ final class ContestController extends AbstractController
 
     #[Route(path: '/{code}', name: 'app_contest_show', methods: ['GET'])]
     public function show(
+        //Contest $contest,
         #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"code": code})')] $contest,
-        EntityManagerInterface $entityManager
+        //EntityManagerInterface $entityManager
     ): Response
     {
         $contestWorks = $contest->getWorks();

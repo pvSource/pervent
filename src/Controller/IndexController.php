@@ -16,9 +16,9 @@ final class IndexController extends AbstractController
         ]);
     }
 
-    #[Route('/header', name: 'app_index_header')]
-    public function header(): Response
-    {
-        return $this->render('_header.html.twig', []);
-    }
+//    #[Route('/header', name: 'app_index_header')]
+//    public function header(): Response
+//    {
+//        return $this->render('_header.html.twig', []);
+//    }
 }
