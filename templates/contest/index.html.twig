@@ -42,6 +42,14 @@
             </p>
         {% endfor %}
 </div>
+    {% if previous >= 0 %}
+        <a href="{{ path('app_contest_index', {'offset': previous}) }}">Преддыдущая страница</a>
+    {% endif %}
+
+    {% if next < contests|length  %}
+        <a href="{{ path('app_contest_index', {'offset': next}) }}">Следующая страница</a>
+    {% endif %}
+
 
     <a href="{{ path('app_contest_new') }}">Создать конкурс</a>
 {% endblock %}

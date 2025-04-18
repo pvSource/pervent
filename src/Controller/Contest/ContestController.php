@@ -7,6 +7,7 @@ use App\Form\ContestType;
 use App\Repository\ContestRepository;
 use App\Repository\WorkRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,10 +18,18 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ContestController extends AbstractController
 {
     #[Route(name: 'app_contest_index', methods: ['GET'])]
-    public function index(ContestRepository $contestRepository): Response
+    public function index(
+        Request $request,
+        ContestRepository $contestRepository
+    ): Response
     {
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $contestPaginator = $contestRepository->getContestPaginator($offset);
+
         return $this->render('contest/index.html.twig', [
-            'contests' => $contestRepository->findAll(),
+            'contests' => $contestPaginator,
+            'previous' => $offset - ContestRepository::CONTESTS_PER_PAGE,
+            'next' => min(count($contestPaginator), $offset + ContestRepository::CONTESTS_PER_PAGE)
         ]);
     }
 
@@ -46,9 +55,7 @@ final class ContestController extends AbstractController
 
     #[Route(path: '/{code}', name: 'app_contest_show', methods: ['GET'])]
     public function show(
-        //Contest $contest,
         #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"code": code})')] $contest,
-        //EntityManagerInterface $entityManager
     ): Response
     {
         $contestWorks = $contest->getWorks();

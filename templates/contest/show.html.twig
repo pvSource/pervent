@@ -1,15 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Contest{% endblock %}
-
+{% block title %}Конкурс > {{ contest.name }}{% endblock %}
+{% block backlink %}<a href="{{ path('app_contest_index')}}">Вернуться ко всем конкурсам</a>{% endblock %}
 {% block body %}
     <section class="main__contest-detail contest-detail">
         <div class="contest-detail__header">
-            <nav class="contest-detail__nav-box">
-                <a href="{{ path('app_contest_index')}}">Вернуться ко всем конкурсам</a>
-            </nav>
-
             <div class="contest-detail__image">
+                <img src="{{ contest.imagePath }}" alt="Конкурс">
             </div>
             <div class="contest-detail__info">
                 <div class="contest-detail__name-box">
@@ -30,13 +27,24 @@
                 <a href="{{ path('app_contest_edit', {'code': contest.code}) }}">Редактировать конкурс</a>
                 {{ include('contest/_delete_form.html.twig') }}
             </div>
+        </div>
+
+        <div class="contest-detail__filters">
 
         </div>
-        <div class="contest-detail__works">
+
+        <div class="contest-detail__work-list work-list">
             {% for work in works %}
-                <div style="border: 1px black solid">
-                    <a href="{{ path('app_contest_work_show', {'contestCode': contest.code, 'id': work.id}) }}">{{ work.name }}</a>
-                    <p>{{ work.description }}</p>
+                <div class="work-list__work-item work-item">
+                    <div class="work-item__image-box">
+                        <img src="{{ work.imagePath }}" alt="Работа">
+                    </div>
+                    <div class="work-item__text">
+                        <a class="work-item__name" href="{{ path('app_contest_work_show', {'contestCode': contest.code, 'id': work.id}) }}">
+                            {{ work.name }}
+                        </a>
+                        <p class="work-item__description">{{ work.description }}</p>
+                    </div>
                 </div>
             {% endfor %}
         </div>

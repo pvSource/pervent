@@ -2,19 +2,21 @@
 
 namespace App\Entity;
 
+use App\EventListener\ContestEntityListener;
 use App\Repository\ContestRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[ORM\Entity(repositoryClass: ContestRepository::class)]
 #[UniqueEntity(
     fields: ['code'],
     message: 'This code is already use in other contest.'
 )]
-//#[UniqueEntity('code')]
 class Contest
 {
     #[ORM\Id]
@@ -42,6 +44,12 @@ class Contest
      */
     #[ORM\OneToMany(targetEntity: Work::class, mappedBy: 'contest')]
     private Collection $works;
+
+    #[ORM\ManyToOne(inversedBy: 'contests')]
+    private ?User $author = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imagePath = null;
 
     public function __construct()
     {
@@ -142,4 +150,36 @@ class Contest
 
         return $this;
     }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): static
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
+    }
+
+    public function setImagePath(?string $imagePath): static
+    {
+        $this->imagePath = $imagePath;
+
+        return $this;
+    }
+//
+//    #[ORM\PrePersist]
+//    public function setAuthorValue(
+//        Security $security
+//    ): void
+//    {
+//        $this->author = $security->getUser();
+//    }
 }

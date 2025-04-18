@@ -16,8 +16,9 @@
         {{ include('_header.html.twig') }}
         <main class="main">
             <div class="main__wrapper">
+                <nav>{% block backlink %}{% endblock %}</nav>
+
                 {% block body %}{% endblock %}
-            </div>
         </main>
     </body>
 </html>

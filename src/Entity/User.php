@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -33,6 +35,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    /**
+     * @var Collection<int, Contest>
+     */
+    #[ORM\OneToMany(targetEntity: Contest::class, mappedBy: 'author')]
+    private Collection $contests;
+
+    /**
+     * @var Collection<int, Work>
+     */
+    #[ORM\OneToMany(targetEntity: Work::class, mappedBy: 'author')]
+    private Collection $works;
+
+    public function __construct()
+    {
+        $this->contests = new ArrayCollection();
+        $this->works = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -107,5 +127,70 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Contest>
+     */
+    public function getContests(): Collection
+    {
+        return $this->contests;
+    }
+
+    public function addContest(Contest $contest): static
+    {
+        if (!$this->contests->contains($contest)) {
+            $this->contests->add($contest);
+            $contest->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContest(Contest $contest): static
+    {
+        if ($this->contests->removeElement($contest)) {
+            // set the owning side to null (unless already changed)
+            if ($contest->getAuthor() === $this) {
+                $contest->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Work>
+     */
+    public function getWorks(): Collection
+    {
+        return $this->works;
+    }
+
+    public function addWork(Work $work): static
+    {
+        if (!$this->works->contains($work)) {
+            $this->works->add($work);
+            $work->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWork(Work $work): static
+    {
+        if ($this->works->removeElement($work)) {
+            // set the owning side to null (unless already changed)
+            if ($work->getAuthor() === $this) {
+                $work->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return (string) $this->email;
     }
 }

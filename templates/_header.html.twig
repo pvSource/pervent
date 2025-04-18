@@ -1,21 +1,27 @@
 <header class="header">
-    <div class="header__logo-box">
+    <a class="header__logo-box" href="{{ path('app_index') }}">
         <img
                 class="header__logo-image"
                 src="/build/images/logo.svg"
                 alt="Pervent"
         >
-    </div>
+    </a>
     <div class="header__nav-box">
         <nav class="header__nav">
-            Конкурсы
+            <a href="{{ path('app_contest_index') }}">Конкурсы</a>
         </nav>
         <nav class="header__nav">
-            О проекте
+            <a href="{{ path('app_about') }}">О проекте</a>
         </nav>
     </div>
 
     <div class="header__settings-box">
-        <button>Настройки</button>
+        {% if app.user %}
+            {{ app.user }}
+            <a href="{{ path('app_logout') }}">Выйти</a>
+        {% else %}
+            <a href="{{ path('app_register') }}">Регистрация</a>
+            <a href="{{ path('app_login') }}">Войти</a>
+        {% endif %}
     </div>
 </header>

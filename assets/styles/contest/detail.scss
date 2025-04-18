@@ -1,0 +1,27 @@
+.contest-detail {
+  &__header {
+    border: 4px black solid;
+    margin-bottom: 10px;
+  }
+
+  &__image {
+    width: 100%;
+    height: 300px;
+  }
+
+  &__info {
+    padding: 10px;
+  }
+
+  &__code {
+    font-size: 12px;
+    opacity: 0.5;
+  }
+
+  &__description-box {
+    background-color: $goldBright;
+    border: 2px black solid;
+    padding: 5px;
+  }
+
+}

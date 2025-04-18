@@ -24,6 +24,12 @@ class Work
     #[ORM\JoinColumn(nullable: false)]
     private ?Contest $contest = null;
 
+    #[ORM\ManyToOne(inversedBy: 'works')]
+    private ?User $author = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imagePath = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +67,30 @@ class Work
     public function setContest(?Contest $contest): static
     {
         $this->contest = $contest;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): static
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
+    }
+
+    public function setImagePath(?string $imagePath): static
+    {
+        $this->imagePath = $imagePath;
 
         return $this;
     }

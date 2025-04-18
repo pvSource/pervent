@@ -3,207 +3,55 @@
 {% block title %}Pervent{% endblock %}
 
 {% block body %}
+    {% if main_contest %}
             <div class="main__contests contests">
                 <div class="contests__primary">
                     <article class="contests__item contest-item contest-item_primary">
                         <div class="contest-item__image-box">
-                            <img src="https://www.newsinlevels.com/wp-content/uploads/2020/08/Depositphotos_9816115_L.jpg" alt="###">
+                            <img src="{{ main_contest.imagePath }}" alt="{{ main_contest.name }}">
                         </div>
                         <div class="contest-item__text-box">
                             <div class="contest-item__name-box">
-                                <h4>Конкурс каллиграфии</h4>
+                                <a href="{{ path('app_contest_show', {'code': main_contest.code}) }}"> {{ main_contest.name }}</a>
                             </div>
                             <div class="contest-item__description-box">
-                                <p>Напиши лучше всех и получи респект и уважение!</p>
+                                <p>{{ main_contest.description }}</p>
                             </div>
                             <div class="contest-item__date-box">
-                                <span>19.02.2025 - 19.07.2025</span>
+                                <span>{{ main_contest.beginAt ? main_contest.beginAt|date('d.m.Y') : '' }} - {{ main_contest.beginAt ? main_contest.finishAt|date('d.m.Y') : '' }}</span>
                             </div>
                             <div class="contest-item__actions-box">
-                                <button class="contest-item__button">
+                                <a href="{{ path('app_contest_work_new', {'contestCode': main_contest.code}) }}" class="contest-item__button">
                                     Принять участие
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </article>
                 </div>
-                <div class="contests__list contests-list">
+    {% endif %}
+    <div class="contests__list contests-list">
+    {% for contest in contests %}
                     <article class="contests-list__item contest-item">
                         <div class="contest-item__image-box">
-                            <img src="https://www.newsinlevels.com/wp-content/uploads/2020/08/Depositphotos_9816115_L.jpg" alt="###">
+                            <img src="{{ contest.imagePath }}" alt="{{ contest.name }}">
                         </div>
                         <div class="contest-item__text-box">
                             <div class="contest-item__name-box">
-                                <h4>Маленькие модники</h4>
+                                <a href="{{ path('app_contest_show', {'code': contest.code}) }}"> {{ contest.name }}</a>
                             </div>
                             <div class="contest-item__description-box">
-                                <p>Создай лучший образ для маленького модника и сделай его суперзвездой!</p>
+                                <p>{{ contest.description }}</p>
                             </div>
                             <div class="contest-item__date-box">
-                                <span>19.04.2025 - 19.07.2025</span>
+                                <span>{{ contest.beginAt ? contest.beginAt|date('d.m.Y') : '' }} - {{ contest.beginAt ? contest.finishAt|date('d.m.Y') : '' }}</span>
                             </div>
                             <div class="contest-item__actions-box">
-                                <button class="contest-item__button">
+                                <a href="{{ path('app_contest_work_new', {'contestCode': contest.code}) }}" class="contest-item__button">
                                     Принять участие
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </article>
-
-                    <article class="contests-list__item contest-item">
-                        <div class="contest-item__image-box">
-                            <img src="https://www.newsinlevels.com/wp-content/uploads/2020/08/Depositphotos_9816115_L.jpg" alt="###">
-                        </div>
-                        <div class="contest-item__text-box">
-                            <div class="contest-item__name-box">
-                                <h4>Маленькие модники</h4>
-                            </div>
-                            <div class="contest-item__description-box">
-                                <p>Создай лучший образ для маленького модника и сделай его суперзвездой!</p>
-                            </div>
-                            <div class="contest-item__date-box">
-                                <span>19.04.2025 - 19.07.2025</span>
-                            </div>
-                            <div class="contest-item__actions-box">
-                                <button class="contest-item__button">
-                                    Принять участие
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="contests-list__item contest-item">
-                        <div class="contest-item__image-box">
-                            <img src="https://www.newsinlevels.com/wp-content/uploads/2020/08/Depositphotos_9816115_L.jpg" alt="###">
-                        </div>
-                        <div class="contest-item__text-box">
-                            <div class="contest-item__name-box">
-                                <h4>Маленькие модники</h4>
-                            </div>
-                            <div class="contest-item__description-box">
-                                <p>Создай лучший образ для маленького модника и сделай его суперзвездой!</p>
-                            </div>
-                            <div class="contest-item__date-box">
-                                <span>19.04.2025 - 19.07.2025</span>
-                            </div>
-                            <div class="contest-item__actions-box">
-                                <button class="contest-item__button">
-                                    Принять участие
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="contests-list__item contest-item">
-                        <div class="contest-item__image-box">
-                            <img src="https://www.newsinlevels.com/wp-content/uploads/2020/08/Depositphotos_9816115_L.jpg" alt="###">
-                        </div>
-                        <div class="contest-item__text-box">
-                            <div class="contest-item__name-box">
-                                <h4>Маленькие модники</h4>
-                            </div>
-                            <div class="contest-item__description-box">
-                                <p>Создай лучший образ для маленького модника и сделай его суперзвездой!</p>
-                            </div>
-                            <div class="contest-item__date-box">
-                                <span>19.04.2025 - 19.07.2025</span>
-                            </div>
-                            <div class="contest-item__actions-box">
-                                <button class="contest-item__button">
-                                    Принять участие
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="contests-list__item contest-item">
-                        <div class="contest-item__image-box">
-                            <img src="https://www.newsinlevels.com/wp-content/uploads/2020/08/Depositphotos_9816115_L.jpg" alt="###">
-                        </div>
-                        <div class="contest-item__text-box">
-                            <div class="contest-item__name-box">
-                                <h4>Маленькие модники</h4>
-                            </div>
-                            <div class="contest-item__description-box">
-                                <p>Создай лучший образ для маленького модника и сделай его суперзвездой!</p>
-                            </div>
-                            <div class="contest-item__date-box">
-                                <span>19.04.2025 - 19.07.2025</span>
-                            </div>
-                            <div class="contest-item__actions-box">
-                                <button class="contest-item__button">
-                                    Принять участие
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="contests-list__item contest-item">
-                        <div class="contest-item__image-box">
-                            <img src="https://www.newsinlevels.com/wp-content/uploads/2020/08/Depositphotos_9816115_L.jpg" alt="###">
-                        </div>
-                        <div class="contest-item__text-box">
-                            <div class="contest-item__name-box">
-                                <h4>Маленькие модники</h4>
-                            </div>
-                            <div class="contest-item__description-box">
-                                <p>Создай лучший образ для маленького модника и сделай его суперзвездой!</p>
-                            </div>
-                            <div class="contest-item__date-box">
-                                <span>19.04.2025 - 19.07.2025</span>
-                            </div>
-                            <div class="contest-item__actions-box">
-                                <button class="contest-item__button">
-                                    Принять участие
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="contests-list__item contest-item">
-                        <div class="contest-item__image-box">
-                            <img src="https://www.newsinlevels.com/wp-content/uploads/2020/08/Depositphotos_9816115_L.jpg" alt="###">
-                        </div>
-                        <div class="contest-item__text-box">
-                            <div class="contest-item__name-box">
-                                <h4>Маленькие модники</h4>
-                            </div>
-                            <div class="contest-item__description-box">
-                                <p>Создай лучший образ для маленького модника и сделай его суперзвездой!</p>
-                            </div>
-                            <div class="contest-item__date-box">
-                                <span>19.04.2025 - 19.07.2025</span>
-                            </div>
-                            <div class="contest-item__actions-box">
-                                <button class="contest-item__button">
-                                    Принять участие
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="contests-list__item contest-item">
-                        <div class="contest-item__image-box">
-                            <img src="https://www.newsinlevels.com/wp-content/uploads/2020/08/Depositphotos_9816115_L.jpg" alt="###">
-                        </div>
-                        <div class="contest-item__text-box">
-                            <div class="contest-item__name-box">
-                                <h4>Маленькие модники</h4>
-                            </div>
-                            <div class="contest-item__description-box">
-                                <p>Создай лучший образ для маленького модника и сделай его суперзвездой!</p>
-                            </div>
-                            <div class="contest-item__date-box">
-                                <span>19.04.2025 - 19.07.2025</span>
-                            </div>
-                            <div class="contest-item__actions-box">
-                                <button class="contest-item__button">
-                                    Принять участие
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-            </div>
-
+    {% endfor %}
+    </div>
 {% endblock %}

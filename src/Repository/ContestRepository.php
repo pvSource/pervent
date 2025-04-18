@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Contest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -11,33 +12,28 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ContestRepository extends ServiceEntityRepository
 {
+    public const CONTESTS_PER_PAGE = 3;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Contest::class);
     }
 
-    //    /**
-    //     * @return Contest[] Returns an array of Contest objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function getContestPaginator(int $offset): Paginator
+    {
+        $query = $this->createQueryBuilder('contest')
+            ->orderBy('contest.beginAt', 'DESC')
+            ->setMaxResults(self::CONTESTS_PER_PAGE)
+            ->setFirstResult($offset)
+            ->getQuery();
+        return new Paginator($query);
+    }
 
-    //    public function findOneBySomeField($value): ?Contest
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function getTopContests(?int $limit = 7)
+    {
+        $query = $this->createQueryBuilder('contest')
+            ->orderBy('contest.beginAt', 'DESC') //todo
+            ->setMaxResults($limit)
+            ->getQuery();
+        return $query->getResult();
+    }
 }
