@@ -21,8 +21,8 @@
                 <td>{{ work.name }}</td>
                 <td>{{ work.description }}</td>
                 <td>
-                    <a href="{{ path('app_contest_work_show', {'id': work.id, contestCode: contest.code}) }}">show</a>
-                    <a href="{{ path('app_contest_work_edit', {'id': work.id, contestCode: contest.code}) }}">edit</a>
+                    <a href="{{ path('app_contest_work_show', {'id': work.id, contestSlug: contest.slug}) }}">show</a>
+                    <a href="{{ path('app_contest_work_edit', {'id': work.id, contestSlug: contest.slug}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -33,5 +33,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_contest_work_new', {contestCode: contest.code}) }}">Create new</a>
+    <a href="{{ path('app_contest_work_new', {contestSlug: contest.slug}) }}">Create new</a>
 {% endblock %}

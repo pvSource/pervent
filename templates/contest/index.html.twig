@@ -21,15 +21,15 @@
                         <span>{{ contest.beginAt ? contest.beginAt|date('Y-m-d H:i:s') : '' }} - {{ contest.finishAt ? contest.finishAt|date('Y-m-d H:i:s') : '' }}</span>
                     </div>
                     <div class="contest-item__actions-box">
-                        <a href="{{ path('app_contest_work_new', {'contestCode': contest.code}) }}" class="contest-item__button">
+                        <a href="{{ path('app_contest_work_new', {'contestSlug': contest.slug}) }}" class="contest-item__button">
                             Принять участие
                         </a>
 
-                        <a href="{{ path('app_contest_edit', {'code': contest.code}) }}" class="contest-item__button">
+                        <a href="{{ path('app_contest_edit', {'slug': contest.slug}) }}" class="contest-item__button">
                             Редактировать
                         </a>
 
-                        <a href="{{ path('app_contest_show', {'code': contest.code}) }}" class="contest-item__button">
+                        <a href="{{ path('app_contest_show', {'slug': contest.slug}) }}" class="contest-item__button">
                             Показать
                         </a>
 

@@ -7,7 +7,7 @@
 
     {{ include('contest/work/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_contest_work_index', {contestCode: contest.code}) }}">back to list</a>
+    <a href="{{ path('app_contest_work_index', {contestSlug: contest.slug}) }}">back to list</a>
 
     {{ include('contest/work/_delete_form.html.twig') }}
 {% endblock %}

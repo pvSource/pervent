@@ -4,33 +4,35 @@
 {% block backlink %}<a href="{{ path('app_contest_index')}}">Вернуться ко всем конкурсам</a>{% endblock %}
 {% block body %}
     <section class="main__contest-detail contest-detail">
-        <div class="contest-detail__header">
-            <div class="contest-detail__image">
-                <img src="{{ contest.imagePath }}" alt="Конкурс">
-            </div>
-            <div class="contest-detail__info">
-                <div class="contest-detail__name-box">
-                    <h2>{{ contest.name }}</h2>
-                    <span class="contest-detail__code">{{ contest.code }}</span>
-                </div>
-                <div class="contest-detail__description-box">
-                    {{ contest.description }}
-                </div>
-                <div class="contest-detail__time-box">
-                    <p>Дата начала конкурса: {{ contest.beginAt ? contest.beginAt|date('Y-m-d H:i:s') : '' }}</p>
-                    <p>Дата окончания конкурса: {{ contest.beginAt ? contest.finishAt|date('Y-m-d H:i:s') : '' }}</p>
-                </div>
-            </div>
 
-            <div class="contest-detail__action-box">
-                <a href="{{ path('app_contest_work_new', {'contestCode': contest.code}) }}">Участвовать</a>
-                <a href="{{ path('app_contest_edit', {'code': contest.code}) }}">Редактировать конкурс</a>
-                {{ include('contest/_delete_form.html.twig') }}
+
+
+        <article class="contests__item contest-item contest-item_primary">
+            <div class="contest-item__image-box">
+                <img src="{{ contest.imagePath }}" alt="{{ contest.name }}">
             </div>
-        </div>
+            <div class="contest-item__text-box">
+                <div class="contest-item__name-box">
+                    <a href="{{ path('app_contest_show', {'slug': contest.slug}) }}"> {{ contest.name }}</a>
+                </div>
+                <div class="contest-item__description-box">
+                    <p>{{ contest.description }}</p>
+                </div>
+                <div class="contest-item__date-box">
+                    <span>{{ contest.beginAt ? contest.beginAt|date('d.m.Y') : '' }} - {{ contest.beginAt ? contest.finishAt|date('d.m.Y') : '' }}</span>
+                </div>
+                <div class="contest-item__actions-box">
+                    <a class="contest-item__button" href="{{ path('app_contest_work_new', {'contestSlug': contest.slug}) }}">
+                        Принять участие
+                    </a>
+                    <a class="contest-item__button" href="{{ path('app_contest_edit', {'slug': contest.slug}) }}">Редактировать конкурс</a>
+                    {{ include('contest/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </article>
 
         <div class="contest-detail__filters">
-
+            
         </div>
 
         <div class="contest-detail__work-list work-list">
@@ -40,7 +42,7 @@
                         <img src="{{ work.imagePath }}" alt="Работа">
                     </div>
                     <div class="work-item__text">
-                        <a class="work-item__name" href="{{ path('app_contest_work_show', {'contestCode': contest.code, 'id': work.id}) }}">
+                        <a class="work-item__name" href="{{ path('app_contest_work_show', {'contestSlug': contest.slug, 'id': work.id}) }}">
                             {{ work.name }}
                         </a>
                         <p class="work-item__description">{{ work.description }}</p>

@@ -12,7 +12,7 @@
                         </div>
                         <div class="contest-item__text-box">
                             <div class="contest-item__name-box">
-                                <a href="{{ path('app_contest_show', {'code': main_contest.code}) }}"> {{ main_contest.name }}</a>
+                                <a href="{{ path('app_contest_show', {'slug': main_contest.slug}) }}"> {{ main_contest.name }}</a>
                             </div>
                             <div class="contest-item__description-box">
                                 <p>{{ main_contest.description }}</p>
@@ -21,7 +21,7 @@
                                 <span>{{ main_contest.beginAt ? main_contest.beginAt|date('d.m.Y') : '' }} - {{ main_contest.beginAt ? main_contest.finishAt|date('d.m.Y') : '' }}</span>
                             </div>
                             <div class="contest-item__actions-box">
-                                <a href="{{ path('app_contest_work_new', {'contestCode': main_contest.code}) }}" class="contest-item__button">
+                                <a href="{{ path('app_contest_work_new', {'contestSlug': main_contest.slug}) }}" class="contest-item__button">
                                     Принять участие
                                 </a>
                             </div>
@@ -37,7 +37,7 @@
                         </div>
                         <div class="contest-item__text-box">
                             <div class="contest-item__name-box">
-                                <a href="{{ path('app_contest_show', {'code': contest.code}) }}"> {{ contest.name }}</a>
+                                <a href="{{ path('app_contest_show', {'slug': contest.slug}) }}"> {{ contest.name }}</a>
                             </div>
                             <div class="contest-item__description-box">
                                 <p>{{ contest.description }}</p>
@@ -46,7 +46,7 @@
                                 <span>{{ contest.beginAt ? contest.beginAt|date('d.m.Y') : '' }} - {{ contest.beginAt ? contest.finishAt|date('d.m.Y') : '' }}</span>
                             </div>
                             <div class="contest-item__actions-box">
-                                <a href="{{ path('app_contest_work_new', {'contestCode': contest.code}) }}" class="contest-item__button">
+                                <a href="{{ path('app_contest_work_new', {'contestSlug': contest.slug}) }}" class="contest-item__button">
                                     Принять участие
                                 </a>
                             </div>

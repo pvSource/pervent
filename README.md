@@ -4,9 +4,9 @@
 
 /contest/ - список конкурсов
 
-/contest/{contestCode}/ - детальная страница конкурса
+/contest/{contestSlug}/ - детальная страница конкурса
 
-/contest/{contestCode}/{workId}/ - детальная страница работы
+/contest/{contestSlug}/{workId}/ - детальная страница работы
 
 # Описание сущностей
 ## Сущность Contest

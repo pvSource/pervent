@@ -8,8 +8,10 @@ use App\Repository\ContestRepository;
 use App\Repository\WorkRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Random\RandomException;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,14 +19,21 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/contest')]
 final class ContestController extends AbstractController
 {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private readonly ContestRepository $contestRepository,
+        #[Autowire('%image_dir%')] private readonly string $imageDir
+    )
+    {
+
+    }
     #[Route(name: 'app_contest_index', methods: ['GET'])]
     public function index(
-        Request $request,
-        ContestRepository $contestRepository
+        Request $request
     ): Response
     {
         $offset = max(0, $request->query->getInt('offset', 0));
-        $contestPaginator = $contestRepository->getContestPaginator($offset);
+        $contestPaginator = $this->contestRepository->getContestPaginator($offset);
 
         return $this->render('contest/index.html.twig', [
             'contests' => $contestPaginator,
@@ -33,16 +42,25 @@ final class ContestController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws RandomException
+     */
     #[Route(path: '/new', name: 'app_contest_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request): Response
     {
         $contest = new Contest();
         $form = $this->createForm(ContestType::class, $contest);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($contest);
-            $entityManager->flush();
+            if ($image = $form['image']->getData()) {
+                $filename = bin2hex(random_bytes(8)) . '.' . $image->guessExtension();
+                $image->move($this->imageDir, $filename);
+                $contest->setImagePath($filename);
+            }
+
+            $this->entityManager->persist($contest);
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('app_contest_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -53,9 +71,9 @@ final class ContestController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/{code}', name: 'app_contest_show', methods: ['GET'])]
+    #[Route(path: '/{slug}', name: 'app_contest_show', methods: ['GET'])]
     public function show(
-        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"code": code})')] $contest,
+        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"slug": slug})')] $contest,
     ): Response
     {
         $contestWorks = $contest->getWorks();
@@ -65,18 +83,17 @@ final class ContestController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/{code}/edit', name: 'app_contest_edit', methods: ['GET', 'POST'])]
+    #[Route(path: '/{slug}/edit', name: 'app_contest_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
-        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"code": code})')] $contest,
-        EntityManagerInterface $entityManager
+        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"slug": slug})')] $contest
     ): Response
     {
         $form = $this->createForm(ContestType::class, $contest);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('app_contest_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -87,16 +104,15 @@ final class ContestController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/{code}', name: 'app_contest_delete', methods: ['POST'])]
+    #[Route(path: '/{slug}', name: 'app_contest_delete', methods: ['POST'])]
     public function delete(
         Request $request,
-        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"code": code})')] $contest,
-        EntityManagerInterface $entityManager
+        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"slug": slug})')] $contest,
     ): Response
     {
         if ($this->isCsrfTokenValid('delete'.$contest->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($contest);
-            $entityManager->flush();
+            $this->entityManager->remove($contest);
+            $this->entityManager->flush();
         }
 
         return $this->redirectToRoute('app_contest_index', [], Response::HTTP_SEE_OTHER);

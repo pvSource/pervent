@@ -13,13 +13,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/contest/{contestCode}/work')]
+#[Route('/contest/{contestSlug}/work')]
 final class WorkController extends AbstractController
 {
     #[Route(name: 'app_contest_work_index', methods: ['GET'])]
     public function index(
         WorkRepository $workRepository,
-        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"code": contestCode})')] $contest
+        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"slug": contestSlug})')] $contest
     ): Response
     {
         $works = $workRepository->findBy([
@@ -36,7 +36,7 @@ final class WorkController extends AbstractController
     public function new(
         Request $request,
         EntityManagerInterface $entityManager,
-        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"code": contestCode})')] $contest
+        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"slug": contestSlug})')] $contest
     ): Response
     {
         $work = new Work();
@@ -48,7 +48,7 @@ final class WorkController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('app_contest_work_index', [
-                'contestCode' => $contest->getCode()
+                'contestSlug' => $contest->getSlug()
             ], Response::HTTP_SEE_OTHER);
         }
 
@@ -62,7 +62,7 @@ final class WorkController extends AbstractController
     #[Route('/{id}', name: 'app_contest_work_show', methods: ['GET'])]
     public function show(
         Work $work,
-        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"code": contestCode})')] $contest
+        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"slug": contestSlug})')] $contest
     ): Response
     {
         return $this->render('contest/work/show.html.twig', [
@@ -76,7 +76,7 @@ final class WorkController extends AbstractController
         Request $request,
         Work $work,
         EntityManagerInterface $entityManager,
-        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"code": contestCode})')] $contest
+        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"slug": contestSlug})')] $contest
     ): Response
     {
         $form = $this->createForm(WorkType::class, $work);
@@ -86,7 +86,7 @@ final class WorkController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('app_contest_work_index', [
-                'contestCode' => $contest->getCode()
+                'contestSlug' => $contest->getSlug()
             ], Response::HTTP_SEE_OTHER);
         }
 
@@ -102,7 +102,7 @@ final class WorkController extends AbstractController
         Request $request,
         Work $work,
         EntityManagerInterface $entityManager,
-        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"code": contestCode})')] $contest
+        #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"slug": contestSlug})')] $contest
     ): Response
     {
         if ($this->isCsrfTokenValid('delete'.$work->getId(), $request->getPayload()->getString('_token'))) {
@@ -111,7 +111,7 @@ final class WorkController extends AbstractController
         }
 
         return $this->redirectToRoute('app_contest_work_index', [
-            'contestCode' => $contest->getCode()
+            'contestSlug' => $contest->getSlug()
         ], Response::HTTP_SEE_OTHER);
     }
 }

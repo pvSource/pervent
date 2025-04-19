@@ -1,11 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}New Contest{% endblock %}
-
+{% block backlink %} <a href="{{ path('app_contest_index') }}">Вернуться к конкурсам</a> {% endblock %}
 {% block body %}
     <h1>Создание нового конкурса</h1>
 
     {{ include('contest/_form.html.twig') }}
-
-    <a href="{{ path('app_contest_index') }}">back to list</a>
 {% endblock %}

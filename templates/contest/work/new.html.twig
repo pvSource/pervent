@@ -7,5 +7,5 @@
 
     {{ include('contest/work/_form.html.twig') }}
 
-    <a href="{{ path('app_contest_work_index', {contestCode: contest.code}) }}">back to list</a>
+    <a href="{{ path('app_contest_work_index', {contestSlug: contest.slug}) }}">back to list</a>
 {% endblock %}

@@ -8,32 +8,33 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContestRepository::class)]
 #[UniqueEntity(
-    fields: ['code'],
-    message: 'This code is already use in other contest.'
+    fields: ['slug'],
+    message: 'This slug is already use in other contest.'
 )]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: true)]
+#[ORM\HasLifecycleCallbacks]
 class Contest
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column(length: 255, unique: true)]
-    private ?string $code = null;
-
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\NotBlank]
     private ?string $description = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $beginAt = null;
 
     #[ORM\Column(nullable: true)]
@@ -51,6 +52,31 @@ class Contest
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imagePath = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deletedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(length: 255, unique: true)]
+    private ?string $slug = null;
+
+    #[ORM\PrePersist]
+    public function setDefaultValues(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        if (!$this->beginAt) {
+            $this->beginAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function computeSlug(SluggerInterface $slugger): void
+    {
+        if (!$this->slug || '-' === $this->slug) {
+            $this->slug = (string) $slugger->slug($this->name . '-' . ((new \DateTimeImmutable())->format('YmdHis')))->toString();
+        }
+    }
+
     public function __construct()
     {
         $this->works = new ArrayCollection();
@@ -61,16 +87,9 @@ class Contest
         return $this->id;
     }
 
-    public function getCode(): ?string
+    public function getSlug(): ?string
     {
-        return $this->code;
-    }
-
-    public function setCode(string $code): static
-    {
-        $this->code = $code;
-
-        return $this;
+        return $this->slug;
     }
 
     public function getName(): ?string
@@ -182,4 +201,36 @@ class Contest
 //    {
 //        $this->author = $security->getUser();
 //    }
+
+    public function getDeletedAt(): ?\DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): static
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
 }

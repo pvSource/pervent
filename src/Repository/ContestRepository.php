@@ -6,6 +6,7 @@ use App\Entity\Contest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * @extends ServiceEntityRepository<Contest>
@@ -13,7 +14,10 @@ use Doctrine\Persistence\ManagerRegistry;
 class ContestRepository extends ServiceEntityRepository
 {
     public const CONTESTS_PER_PAGE = 3;
-    public function __construct(ManagerRegistry $registry)
+    public readonly string $imageDir;
+    public function __construct(
+        ManagerRegistry $registry,
+    )
     {
         parent::__construct($registry, Contest::class);
     }
