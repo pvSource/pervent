@@ -54,7 +54,10 @@ class ContestType extends AbstractType
                     'label' => 'Старт проведения конкурса',
                     'widget' => 'single_text',
                     'mapped' => true,
-                    'required' => false
+                    'required' => false,
+                    //'input' => 'datetime_immutable',
+                    'html5' => true,
+                    'data' => new \DateTime(),
                 ]
             )
             ->add(

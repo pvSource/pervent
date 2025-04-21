@@ -3,12 +3,25 @@
 {% block title %}Конкурсы{% endblock %}
 
 {% block body %}
-<div class="contests__list contests-list">
+
+    <div class="main__title">
+        <h1>Конкурсы</h1>
+        <a href="{{ path('app_contest_new') }}">Создать конкурс</a>
+    </div>
+
+    <div class="contests__filters filters filters_contest">
+        {{ form_start(filterForm, { method: 'get' }) }}
+            {{ form_widget(filterForm) }}
+            <button type="submit">Поиск</button>
+        {{ form_end(filterForm) }}
+    </div>
+
+    <div class="contests__list contests-list">
         {% for contest in contests %}
 
             <article class="contests-list__item contest-item">
                 <div class="contest-item__image-box">
-                    <img src="https://www.newsinlevels.com/wp-content/uploads/2020/08/Depositphotos_9816115_L.jpg" alt="###">
+                    <img src="/uploads/images/{{ contest.imagePath }}" alt="{{ contest.name }}">
                 </div>
                 <div class="contest-item__text-box">
                     <div class="contest-item__name-box">
@@ -41,7 +54,7 @@
                 Не найдено конкурсов!
             </p>
         {% endfor %}
-</div>
+    </div>
     {% if previous >= 0 %}
         <a href="{{ path('app_contest_index', {'offset': previous}) }}">Преддыдущая страница</a>
     {% endif %}
@@ -50,6 +63,4 @@
         <a href="{{ path('app_contest_index', {'offset': next}) }}">Следующая страница</a>
     {% endif %}
 
-
-    <a href="{{ path('app_contest_new') }}">Создать конкурс</a>
 {% endblock %}

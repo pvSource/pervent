@@ -4,6 +4,7 @@ namespace App\Controller\Contest;
 
 use App\Entity\Contest;
 use App\Form\ContestType;
+use App\Form\Filter\ContestListType;
 use App\Repository\ContestRepository;
 use App\Repository\WorkRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,7 +23,7 @@ final class ContestController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private readonly ContestRepository $contestRepository,
-        #[Autowire('%image_dir%')] private readonly string $imageDir
+        #[Autowire('%image_dir%')] private readonly string $imageDir,
     )
     {
 
@@ -32,11 +33,29 @@ final class ContestController extends AbstractController
         Request $request
     ): Response
     {
+        $form = $this->createForm(ContestListType::class);
+        $form->handleRequest($request);
+
+        $filterData = [
+            'search' => $form->get('search')->getData(),
+            'author' => $form->get('is-author')->getData() ? $this->getUser() : null,
+            'participant' => $form->get('is-participant')->getData() ? $this->getUser(): null,
+        ];
+
+        $sortData = [
+            'sortBy' => $form->get('sort-by')->getData()
+        ];
+
         $offset = max(0, $request->query->getInt('offset', 0));
-        $contestPaginator = $this->contestRepository->getContestPaginator($offset);
+        $contestPaginator = $this->contestRepository->getContestPaginator(
+            offset: $offset,
+            filterData: $filterData,
+            sortData: $sortData
+        );
 
         return $this->render('contest/index.html.twig', [
             'contests' => $contestPaginator,
+            'filterForm' => $form->createView(),
             'previous' => $offset - ContestRepository::CONTESTS_PER_PAGE,
             'next' => min(count($contestPaginator), $offset + ContestRepository::CONTESTS_PER_PAGE)
         ]);

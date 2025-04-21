@@ -13,8 +13,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  */
 class ContestRepository extends ServiceEntityRepository
 {
-    public const CONTESTS_PER_PAGE = 3;
-    public readonly string $imageDir;
+    public const CONTESTS_PER_PAGE = 9;
     public function __construct(
         ManagerRegistry $registry,
     )
@@ -22,13 +21,51 @@ class ContestRepository extends ServiceEntityRepository
         parent::__construct($registry, Contest::class);
     }
 
-    public function getContestPaginator(int $offset): Paginator
+    public function getContestPaginator(
+        int $offset,
+        ?array $filterData = [],
+        ?array $sortData = [],
+    ): Paginator
     {
-        $query = $this->createQueryBuilder('contest')
-            ->orderBy('contest.beginAt', 'DESC')
+        $queryBuilder = $this->createQueryBuilder('contest')
             ->setMaxResults(self::CONTESTS_PER_PAGE)
-            ->setFirstResult($offset)
-            ->getQuery();
+            ->setFirstResult($offset);
+
+        if (!isset($sortData['sortBy'])) {
+            $sortData['sortBy'] = 'beginAt';
+        }
+
+        if (!isset($sortData['sortDirection'])) {
+            $sortData['sortDirection'] = 'ASC';
+        }
+
+        $queryBuilder->orderBy('contest.' . $sortData['sortBy'], $sortData['sortDirection']);
+
+        if ($filterData) {
+            if (!empty($filterData['search'])) {
+                $queryBuilder
+                    ->andWhere("contest.name LIKE :search OR contest.description LIKE :search")
+                    ->setParameter('search', '%' . $filterData['search'] . '%')
+                ;
+            }
+
+            if ($filterData['author']) {
+                $queryBuilder
+                    ->andWhere("contest.author = :author")
+                    ->setParameter('author', $filterData['author'])
+                ;
+            }
+
+            if ($filterData['participant']) {
+                $queryBuilder
+                    ->join('contest.works', 'work')
+                    ->andWhere("work.author = :participant")
+                    ->setParameter('participant', $filterData['participant'])
+                ;
+            }
+        }
+
+        $query = $queryBuilder->getQuery();
         return new Paginator($query);
     }
 
