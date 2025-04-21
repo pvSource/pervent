@@ -1,14 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Конкурсы{% endblock %}
+{% block maintitle %}Конкурсы{% endblock %}
+{% block chainadditional %}
+    <a href="{{ path('app_contest_new') }}"> [ Создать ] </a>
+{% endblock %}
 
 {% block body %}
-
-    <div class="main__title">
-        <h1>Конкурсы</h1>
-        <a href="{{ path('app_contest_new') }}">Создать конкурс</a>
-    </div>
-
     <div class="contests__filters filters filters_contest">
         {{ form_start(filterForm, { method: 'get' }) }}
             {{ form_widget(filterForm) }}
@@ -34,13 +32,19 @@
                         <span>{{ contest.beginAt ? contest.beginAt|date('Y-m-d H:i:s') : '' }} - {{ contest.finishAt ? contest.finishAt|date('Y-m-d H:i:s') : '' }}</span>
                     </div>
                     <div class="contest-item__actions-box">
+                        {% if app.user %}
+
                         <a href="{{ path('app_contest_work_new', {'contestSlug': contest.slug}) }}" class="contest-item__button">
                             Принять участие
                         </a>
 
-                        <a href="{{ path('app_contest_edit', {'slug': contest.slug}) }}" class="contest-item__button">
-                            Редактировать
-                        </a>
+                            {% if app.user == contest.author %}
+                                <a href="{{ path('app_contest_edit', {'slug': contest.slug}) }}" class="contest-item__button">
+                                    Редактировать
+                                </a>
+                            {% endif %}
+                        {% endif %}
+
 
                         <a href="{{ path('app_contest_show', {'slug': contest.slug}) }}" class="contest-item__button">
                             Показать

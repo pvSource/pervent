@@ -1,38 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Конкурс > {{ contest.name }}{% endblock %}
-{% block backlink %}<a href="{{ path('app_contest_index')}}">Вернуться ко всем конкурсам</a>{% endblock %}
+{% block title %}Конкурсы > {{ contest.name }}{% endblock %}
+{% block backlink %}<a href="{{ path('app_contest_index')}}">Конкурсы</a>{% endblock %}
+{% block maintitle %}{{ contest.name }}{% endblock %}
 {% block body %}
     <section class="main__contest-detail contest-detail">
 
+        {{ include('contest/_contest_header.html.twig', {'contest': contest}) }}
 
-
-        <article class="contests__item contest-item contest-item_primary">
-            <div class="contest-item__image-box">
-                <img src="{{ contest.imagePath }}" alt="{{ contest.name }}">
-            </div>
-            <div class="contest-item__text-box">
-                <div class="contest-item__name-box">
-                    <a href="{{ path('app_contest_show', {'slug': contest.slug}) }}"> {{ contest.name }}</a>
-                </div>
-                <div class="contest-item__description-box">
-                    <p>{{ contest.description }}</p>
-                </div>
-                <div class="contest-item__date-box">
-                    <span>{{ contest.beginAt ? contest.beginAt|date('d.m.Y') : '' }} - {{ contest.beginAt ? contest.finishAt|date('d.m.Y') : '' }}</span>
-                </div>
-                <div class="contest-item__actions-box">
-                    <a class="contest-item__button" href="{{ path('app_contest_work_new', {'contestSlug': contest.slug}) }}">
-                        Принять участие
-                    </a>
-                    <a class="contest-item__button" href="{{ path('app_contest_edit', {'slug': contest.slug}) }}">Редактировать конкурс</a>
-                    {{ include('contest/_delete_form.html.twig') }}
-                </div>
-            </div>
-        </article>
-
-        <div class="contest-detail__filters">
-            
+        <div class="contest-detail__filters filters filters_work">
+            {{ form_start(filterForm, { method: 'get' }) }}
+            {{ form_widget(filterForm) }}
+            <button type="submit">Поиск</button>
+            {{ form_end(filterForm) }}
         </div>
 
         <div class="contest-detail__work-list work-list">

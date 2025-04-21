@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Work{% endblock %}
+{% block title %}Новая работа{% endblock %}
 
 {% block body %}
-    <h1>Create new Work</h1>
+    {{ include('contest/_contest_header.html.twig', {'contest': contest}) }}
+
+    <h1>Добавить работу к конкурсу</h1>
 
     {{ include('contest/work/_form.html.twig') }}
 

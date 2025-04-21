@@ -16,28 +16,38 @@ class WorkRepository extends ServiceEntityRepository
         parent::__construct($registry, Work::class);
     }
 
-    //    /**
-    //     * @return Work[] Returns an array of Work objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('w')
-    //            ->andWhere('w.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('w.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function getList(?array $filterData = [], ?array $sortData = [])
+    {
+        $queryBuilder = $this->createQueryBuilder('work');
 
-    //    public function findOneBySomeField($value): ?Work
-    //    {
-    //        return $this->createQueryBuilder('w')
-    //            ->andWhere('w.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (!isset($sortData['sortBy'])) {
+            $sortData['sortBy'] = 'createdAt';
+        }
+
+        if (!isset($sortData['sortDirection'])) {
+            $sortData['sortDirection'] = 'ASC';
+        }
+
+        $queryBuilder->orderBy('work.' . $sortData['sortBy'], $sortData['sortDirection']);
+
+        if ($filterData) {
+            if (!empty($filterData['search'])) {
+                $queryBuilder
+                    ->andWhere("work.name LIKE :search OR work.description LIKE :search")
+                    ->setParameter('search', '%' . $filterData['search'] . '%')
+                ;
+            }
+
+            if ($filterData['author']) {
+                $queryBuilder
+                    ->andWhere("work.author = :author")
+                    ->setParameter('author', $filterData['author'])
+                ;
+            }
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+
 }

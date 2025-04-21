@@ -3,6 +3,9 @@
 {% block title %}Work index{% endblock %}
 
 {% block body %}
+
+    {{ include('contest/_contest_header.html.twig', {'contest': contest}) }}
+
     <h1>Work index</h1>
 
     <table class="table">

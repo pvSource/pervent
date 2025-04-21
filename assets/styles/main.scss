@@ -9,4 +9,22 @@ body {
     margin-left: auto;
     margin-right: auto;
   }
+
+  &__chain {
+    display: flex;
+    font-weight: bold;
+    font-size: 32px;
+
+    nav {
+      opacity: 0.5;
+      font-weight: bold;
+      font-size: 32px;
+    }
+
+    h1 {
+      display: inline;
+      font-weight: bold;
+      font-size: 32px;
+    }
+  }
 }

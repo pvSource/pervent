@@ -38,6 +38,9 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/contest/new, roles: ROLE_USER }
+        - { path: ^/contest/edit, roles: ROLE_USER }
+        - { path: ^/contest/[^/]+/work/new, roles: ROLE_USER }
+        - { path: ^/contest/[^/]+/work/edit, roles: ROLE_USER }
 
 when@test:
     security:

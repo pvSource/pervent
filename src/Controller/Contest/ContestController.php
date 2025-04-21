@@ -5,8 +5,12 @@ namespace App\Controller\Contest;
 use App\Entity\Contest;
 use App\Form\ContestType;
 use App\Form\Filter\ContestListType;
+use App\Form\Filter\WorkListType;
 use App\Repository\ContestRepository;
 use App\Repository\WorkRepository;
+use App\Service\ContestService;
+use App\Service\ImageService;
+use App\Service\WorkService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Random\RandomException;
@@ -22,11 +26,11 @@ final class ContestController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private readonly ContestRepository $contestRepository,
-        #[Autowire('%image_dir%')] private readonly string $imageDir,
+        private readonly ContestService $contestService,
+        private readonly WorkService $workService,
+        private readonly ImageService $imageService
     )
     {
-
     }
     #[Route(name: 'app_contest_index', methods: ['GET'])]
     public function index(
@@ -35,23 +39,9 @@ final class ContestController extends AbstractController
     {
         $form = $this->createForm(ContestListType::class);
         $form->handleRequest($request);
-
-        $filterData = [
-            'search' => $form->get('search')->getData(),
-            'author' => $form->get('is-author')->getData() ? $this->getUser() : null,
-            'participant' => $form->get('is-participant')->getData() ? $this->getUser(): null,
-        ];
-
-        $sortData = [
-            'sortBy' => $form->get('sort-by')->getData()
-        ];
-
         $offset = max(0, $request->query->getInt('offset', 0));
-        $contestPaginator = $this->contestRepository->getContestPaginator(
-            offset: $offset,
-            filterData: $filterData,
-            sortData: $sortData
-        );
+
+        $contestPaginator = $this->contestService->getFilteredPage($form, $offset);
 
         return $this->render('contest/index.html.twig', [
             'contests' => $contestPaginator,
@@ -73,8 +63,7 @@ final class ContestController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($image = $form['image']->getData()) {
-                $filename = bin2hex(random_bytes(8)) . '.' . $image->guessExtension();
-                $image->move($this->imageDir, $filename);
+                $filename = $this->imageService->upload($image);
                 $contest->setImagePath($filename);
             }
 
@@ -93,12 +82,18 @@ final class ContestController extends AbstractController
     #[Route(path: '/{slug}', name: 'app_contest_show', methods: ['GET'])]
     public function show(
         #[MapEntity(class: Contest::class, expr: 'repository.findOneBy({"slug": slug})')] $contest,
+        Request $request
     ): Response
     {
-        $contestWorks = $contest->getWorks();
+        $form = $this->createForm(WorkListType::class);
+        $form->handleRequest($request);
+
+        $works = $this->workService->getFilteredWorks($form);
+
         return $this->render('contest/show.html.twig', [
+            'filterForm' => $form->createView(),
             'contest' => $contest,
-            'works' => $contestWorks
+            'works' => $works
         ]);
     }
 

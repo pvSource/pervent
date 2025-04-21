@@ -1,0 +1,29 @@
+<article class="contests__item contest-item contest-item_primary">
+    <div class="contest-item__image-box">
+        <img src="{{ contest.imagePath }}" alt="{{ contest.name }}">
+    </div>
+    <div class="contest-item__text-box">
+        <div class="contest-item__name-box">
+            <a href="{{ path('app_contest_show', {'slug': contest.slug}) }}"> {{ contest.name }}</a>
+        </div>
+        <div class="contest-item__description-box">
+            <p>{{ contest.description }}</p>
+        </div>
+        <div class="contest-item__date-box">
+            <span>{{ contest.beginAt ? contest.beginAt|date('d.m.Y') : '' }} - {{ contest.beginAt ? contest.finishAt|date('d.m.Y') : '' }}</span>
+        </div>
+        <div class="contest-item__actions-box">
+
+            {% if (app.user) %}
+                <a class="contest-item__button" href="{{ path('app_contest_work_new', {'contestSlug': contest.slug}) }}">
+                    Принять участие
+                </a>
+                {% if (app.user == contest.author) %}
+                    <a class="contest-item__button" href="{{ path('app_contest_edit', {'slug': contest.slug}) }}">Редактировать конкурс</a>
+                    {{ include('contest/_delete_form.html.twig') }}
+                {% endif %}
+            {% endif %}
+
+        </div>
+    </div>
+</article>

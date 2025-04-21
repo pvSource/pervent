@@ -3,6 +3,8 @@
 {% block title %}Edit Work{% endblock %}
 
 {% block body %}
+    {{ include('contest/_contest_header.html.twig', {'contest': contest}) }}
+
     <h1>Edit Work</h1>
 
     {{ include('contest/work/_form.html.twig', {'button_label': 'Update'}) }}

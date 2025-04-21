@@ -1,30 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Work{% endblock %}
-
+{% block title %}{{ contest.name }} > {{ work.name }}{% endblock %}
+{% block backlink %}<a href="{{ path('app_contest_show', {'slug': contest.slug})}}">{{ contest.name }}</a>{% endblock %}
+{% block maintitle %}{{ work.name }}{% endblock %}
 {% block body %}
-    <h1>Work</h1>
+    <section class="main__work-detail work-detail">
+        {{ include('contest/_contest_header.html.twig', {'contest': contest}) }}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ work.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ work.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ work.description }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <div class="work-detail__work-box">
+            {% if (work.author) %}
+            <div class="work-detail__author">
+                {{ work.author.email }}
+            </div>
+            {% endif %}
+            <div class="work-detail__info">
+                <h2 class="work-detail__name">{{ work.name }}</h2>
+                <p class="work-detail__description">
+                    {{ work.description }}
+                </p>
+                {% if (work.imagePath) %}
+                    <img src="/uploads/images/{{ work.imagePath }}" alt="{{ work.name }}">
+                {% endif %}
+            </div>
 
-    <a href="{{ path('app_contest_work_index', {'contestSlug': contest.slug}) }}">back to list</a>
+            <div class="work-detail__action-box">
+                {% if (app.user == work.author)  %}
+                    <a href="{{ path('app_contest_work_edit', {'id': work.id, 'contestSlug': contest.slug}) }}">Редактировать</a>
+                {% endif %}
+                <button
+                        class="btn-like"
+                        data-url="{{ path('app_api_v1_contest_work_like_add', {'workId': work.id, 'contestSlug': contest.slug}) }}"
+                >❤️ {{ work.likes|length }}
+                </button>
+            </div>
+        </div>
+    </section>
 
-    <a href="{{ path('app_contest_work_edit', {'id': work.id, 'contestSlug': contest.slug}) }}">edit</a>
-
-    {{ include('contest/work/_delete_form.html.twig') }}
 {% endblock %}
